@@ -86,7 +86,7 @@
 
         .label {
             font-size: 2.5rem;
-            color: #FFEB3B;
+            color: yellow;
             margin-bottom: 0px;
             margin-top: 0 !important;
             text-transform: uppercase;
@@ -102,6 +102,19 @@
             50% {
                 transform: translateY(-10px);
             }
+        }
+
+        .plane-emoji {
+            position: absolute;
+            font-size: 4rem;
+            display: none;
+        }
+
+        .svg-container {
+            position: relative;
+            width: 900px;
+            height: 337.5px;
+            margin-top: -250px;
         }
     </style>
 </head>
@@ -121,9 +134,18 @@
 
         <!-- Right Side for Countdown -->
         <div class="countdown-section">
-            <div style="font-size: 3em; position: absolute; top: 30px; color: #ffeb3b;">
+            <div style="font-size: 3em; position: absolute; top: 30px; color: yellow;">
                 Dhaka Opti Retreat 2024
             </div>
+            <div class="svg-container">
+                <svg width="900" height="337.5" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+                    <path id="arcPath" d="M 12 172 A 200 82 0 0 1 388 172" stroke="cyan" fill="transparent"
+                        stroke-width="5" />
+                </svg>
+
+                <div id="planeEmoji" class="plane-emoji">✈️</div>
+            </div>
+
             <div id="title">🏖️ Countdown to Cox Town! 🏖️</div>
             <div id="countdown">
                 <div class="time-box">
@@ -147,6 +169,51 @@
     </div>
 
     <script>
+        const planePositionForDays = {
+            8: {
+                bottom: '58px',
+                left: '200px',
+                transform: 'rotate(28deg)'
+            },
+            7: {
+                bottom: '58px',
+                left: '200px',
+                transform: 'rotate(28deg)'
+            },
+            6: {
+                bottom: '74px',
+                left: '270px',
+                transform: 'rotate(33deg)'
+            },
+            5: {
+                bottom: '86px',
+                left: '350px',
+                transform: 'rotate(39deg)'
+            },
+            4: {
+                bottom: '89px',
+                left: '425px',
+                transform: 'rotate(46deg)'
+            },
+            3: {
+                bottom: '85px',
+                left: '500px',
+                transform: 'rotate(53deg)'
+            },
+            2: {
+                bottom: '73px',
+                left: '575px',
+                transform: 'rotate(59deg)'
+            },
+            1: {
+                bottom: '50px',
+                left: '650px',
+                transform: 'rotate(66deg)'
+            }
+        }
+    </script>
+
+    <script>
         // Slideshow logic
         const slides = document.querySelectorAll('.slideshow img');
         let currentSlide = 0;
@@ -166,7 +233,16 @@
             return `${num}`.padStart(2, '0')
         }
 
-        function updateCountdown() {
+        function updatePlanePosition(days) {
+            const config = planePositionForDays[days]
+            const elem = document.getElementById('planeEmoji')
+            elem.style.display = 'block'
+            elem.style.bottom = config.bottom;
+            elem.style.transform = config.transform;
+            elem.style.left = config.left;
+        }
+
+        function getDistance() {
             const now = new Date().getTime();
             const distance = eventDate - now;
 
@@ -175,6 +251,18 @@
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            return {
+                days, hours, minutes, seconds
+            }
+        }
+
+        function updateCountdown() {
+            const {
+                days, hours, minutes, seconds
+            } = getDistance()
+
+            updatePlanePosition(days)
 
             // Update the elements
             document.getElementById("days").textContent = padStart(days);
@@ -189,7 +277,11 @@
             }
         }
         const timerInterval = setInterval(updateCountdown, 1000); // Update countdown every second
+
+        const { days } = getDistance()
+        updatePlanePosition(days);
     </script>
+
 
 </body>
 
