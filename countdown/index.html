@@ -123,6 +123,8 @@
             position: absolute;
             left: 0;
             object-fit: cover;
+            height: 100vh;
+            max-width: 100%;
         }
 
         .countdown-content {
@@ -136,7 +138,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.3);
+            background-color: rgba(0, 0, 0, 0.45);
             z-index: 2;
         }
     </style>
@@ -164,7 +166,8 @@
             </div>
 
             <video autoplay muted loop id="bg-video">
-                <source src="https://videos.pexels.com/video-files/1321208/1321208-uhd_2560_1440_30fps.mp4"
+                <source id="bg-video-source"
+                    src="https://videos.pexels.com/video-files/1321208/1321208-uhd_2560_1440_30fps.mp4"
                     type="video/mp4">
                 Your browser does not support the video tag.
             </video>
@@ -265,6 +268,9 @@
         }
 
         setInterval(showNextSlide, 5000); // Change image every 5 seconds
+    </script>
+
+    <script>
 
         // Countdown logic
         const eventDate = new Date("Oct 25, 2024 10:00:00").getTime();
@@ -293,13 +299,13 @@
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             return {
-                days, hours, minutes, seconds
+                days, hours, minutes, seconds, distance
             }
         }
 
         function updateCountdown() {
             const {
-                days, hours, minutes, seconds
+                days, hours, minutes, seconds, distance
             } = getDistance()
 
             updatePlanePosition(days)
@@ -320,6 +326,35 @@
 
         const { days } = getDistance()
         updatePlanePosition(days);
+    </script>
+
+    <script>
+        const videoSources = [
+            'https://videos.pexels.com/video-files/1321208/1321208-uhd_2560_1440_30fps.mp4',
+            'https://videos.pexels.com/video-files/4662765/4662765-hd_1920_1080_25fps.mp4',
+            'https://videos.pexels.com/video-files/856430/856430-uhd_2560_1440_30fps.mp4',
+            'https://videos.pexels.com/video-files/854131/854131-hd_1920_1080_30fps.mp4'
+        ]
+
+        const videoElement = document.getElementById('bg-video');
+        const videoSource = document.getElementById('bg-video-source');
+
+        // Initial video index
+        let currentVideoIndex = 0;
+
+        function updateVideoSource() {
+            // Increment the index
+            currentVideoIndex = (currentVideoIndex + 1) % videoSources.length;
+
+            // Update the source element's src attribute
+            videoSource.src = videoSources[currentVideoIndex];
+
+            // Load the new video and play
+            videoElement.load();
+            videoElement.play();
+        }
+
+        setInterval(updateVideoSource, 5000);
     </script>
 
 
