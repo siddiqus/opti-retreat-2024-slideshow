@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Countdown to Cox Town!</title>
     <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nabla:EDPT,EHLT@30..200,24&display=swap" rel="stylesheet">
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -115,7 +117,7 @@
             position: relative;
             width: 900px;
             height: 337.5px;
-            margin-top: -250px;
+            /* margin-top: -250px; */
         }
 
         #bg-video {
@@ -147,6 +149,34 @@
             opacity: 0;
         }
     </style>
+    <style>
+        #pageHeaderTitle {
+            font-size: 5rem;
+            font-family: Nabla;
+            color: yellow;
+            max-width: 100%;
+            text-align: center;
+        }
+
+
+        #pageHeaderTitle span {
+            animation: depth 1s ease-in-out alternate infinite;
+            position: relative;
+            display: inline-block;
+            font-variation-settings: "EDPT" 30;
+        }
+
+        @keyframes depth {
+            0% {
+                transform: translatex(0) translatey(0);
+            }
+
+            100% {
+                font-variation-settings: "EDPT" 200;
+                transform: translatex(0.15em) translatey(0.1em);
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -166,8 +196,7 @@
         <!-- Right Side for Countdown -->
         <div class="countdown-section">
             <div style="font-size: 3em; position: absolute; top: 30px; color: yellow; z-index: 10;">
-                <div style="text-align: center;">
-                    Dhaka Opti Retreat 2024
+                <div id="pageHeaderTitle">
                 </div>
             </div>
 
@@ -396,6 +425,25 @@
         setInterval(updateVideoSource, 5000);
     </script>
 
+    <script>
+        const text = 'Dhaka Opti Retreat 2024'.replace(/' '/g, '&nbsp;');
+
+        let html = ''
+
+        text.split("").forEach(s => {
+            if (s === ' ') {
+                html += ' '
+            } else {
+                html += `<span>${s}</span>`
+            }
+        })
+
+        document.getElementById('pageHeaderTitle').innerHTML = html;
+
+        [...document.querySelectorAll('#pageHeaderTitle span')].forEach((el, index) => {
+            el.style.animationDelay = `${0.1 + (index * 0.1)}s`
+        })
+    </script>
 
 </body>
 
