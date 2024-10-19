@@ -12,7 +12,7 @@
             margin: 0;
             height: 100vh;
             display: flex;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0, 0, 0, 0.5);
             color: white;
         }
 
@@ -285,19 +285,27 @@
             return `${num}`.padStart(2, '0')
         }
 
-        function updatePlanePosition(days, hours) {
+        function calculatePixelPositionDistance({ hours, minutes, seconds }) {
+            const totalPixels = 75
+            const totalTimeInSeconds = 86400
+            const timeInSeconds = (+hours * 3600) + (+minutes * 60) + +seconds;
+
+            const pixelPosition = (timeInSeconds / totalTimeInSeconds) * totalPixels;
+
+            return totalPixels - Number(pixelPosition.toFixed(4));
+        }
+
+
+        function updatePlanePosition({ days, hours, minutes, seconds }) {
             const config = planePositionForDays[days]
             const elem = document.getElementById('planeEmoji')
-
-            const hoursPercentage = (+hours) / 24
 
             const nextConfig = planePositionForDays[days + 1]
 
             let left = Number(config.left.split('px').shift())
             if (nextConfig) {
-                const distance = 75;
-                const distanceByPercentage = Number((distance * hoursPercentage).toFixed(0))
-                left = left + distanceByPercentage
+                const positionalDistance = calculatePixelPositionDistance({ hours, minutes, seconds })
+                left = left + positionalDistance
             }
 
             elem.style.display = 'block'
@@ -326,7 +334,7 @@
                 days, hours, minutes, seconds, distance
             } = getDistance()
 
-            updatePlanePosition(days, hours)
+            updatePlanePosition({ days, hours, minutes, seconds })
 
             // Update the elements
             document.getElementById("days").textContent = padStart(days);
@@ -342,8 +350,7 @@
         }
         const timerInterval = setInterval(updateCountdown, 1000); // Update countdown every second
 
-        const { days, hours } = getDistance()
-        updatePlanePosition(days, hours);
+        updatePlanePosition(getDistance());
     </script>
 
     <script>
