@@ -12,7 +12,7 @@
             margin: 0;
             height: 100vh;
             display: flex;
-            background-color: #861cff;
+            background-color: rgba(0,0,0,0.5);
             color: white;
         }
 
@@ -125,6 +125,7 @@
             object-fit: cover;
             height: 100vh;
             max-width: 100%;
+            transition: opacity 0.2s ease;
         }
 
         .countdown-content {
@@ -140,6 +141,10 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.45);
             z-index: 2;
+        }
+
+        video.hidden {
+            opacity: 0;
         }
     </style>
 </head>
@@ -230,27 +235,27 @@
                 transform: 'rotate(33deg)'
             },
             5: {
-                bottom: '86px',
+                bottom: '90px',
                 left: '350px',
                 transform: 'rotate(39deg)'
             },
             4: {
-                bottom: '89px',
+                bottom: '92px',
                 left: '425px',
                 transform: 'rotate(46deg)'
             },
             3: {
-                bottom: '85px',
+                bottom: '88px',
                 left: '500px',
                 transform: 'rotate(53deg)'
             },
             2: {
-                bottom: '73px',
+                bottom: '76px',
                 left: '575px',
                 transform: 'rotate(59deg)'
             },
             1: {
-                bottom: '50px',
+                bottom: '54px',
                 left: '650px',
                 transform: 'rotate(66deg)'
             }
@@ -280,13 +285,25 @@
             return `${num}`.padStart(2, '0')
         }
 
-        function updatePlanePosition(days) {
+        function updatePlanePosition(days, hours) {
             const config = planePositionForDays[days]
             const elem = document.getElementById('planeEmoji')
+
+            const hoursPercentage = (+hours) / 24
+
+            const nextConfig = planePositionForDays[days + 1]
+
+            let left = Number(config.left.split('px').shift())
+            if (nextConfig) {
+                const distance = 75;
+                const distanceByPercentage = Number((distance * hoursPercentage).toFixed(0))
+                left = left + distanceByPercentage
+            }
+
             elem.style.display = 'block'
             elem.style.bottom = config.bottom;
             elem.style.transform = config.transform;
-            elem.style.left = config.left;
+            elem.style.left = `${left}px`;
         }
 
         function getDistance() {
@@ -309,7 +326,7 @@
                 days, hours, minutes, seconds, distance
             } = getDistance()
 
-            updatePlanePosition(days)
+            updatePlanePosition(days, hours)
 
             // Update the elements
             document.getElementById("days").textContent = padStart(days);
@@ -325,8 +342,8 @@
         }
         const timerInterval = setInterval(updateCountdown, 1000); // Update countdown every second
 
-        const { days } = getDistance()
-        updatePlanePosition(days);
+        const { days, hours } = getDistance()
+        updatePlanePosition(days, hours);
     </script>
 
     <script>
@@ -343,16 +360,25 @@
         // Initial video index
         let currentVideoIndex = 0;
 
+        function fadeOutVideo() {
+            videoElement.classList.add('hidden');
+        }
+
+        function fadeInVideo() {
+            videoElement.classList.remove('hidden');
+        }
+
         function updateVideoSource() {
-            // Increment the index
-            currentVideoIndex = (currentVideoIndex + 1) % videoSources.length;
+            fadeOutVideo()
 
-            // Update the source element's src attribute
-            videoSource.src = videoSources[currentVideoIndex];
+            setTimeout(() => {
+                currentVideoIndex = (currentVideoIndex + 1) % videoSources.length;
+                videoSource.src = videoSources[currentVideoIndex];
+                videoElement.load();
+                videoElement.play();
 
-            // Load the new video and play
-            videoElement.load();
-            videoElement.play();
+                setTimeout(fadeInVideo, 100);
+            }, 200);
         }
 
         setInterval(updateVideoSource, 5000);
