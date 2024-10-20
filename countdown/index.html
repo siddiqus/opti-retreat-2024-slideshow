@@ -68,7 +68,7 @@
             width: 100%;
             max-width: 900px;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
             background-color: #a04cff;
             padding: 30px !important;
         }
@@ -176,10 +176,69 @@
                 transform: translatex(0.15em) translatey(0.1em);
             }
         }
+
+        #modal {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 5000;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            display: none;
+        }
+
+        #modalGif {
+            width: 50%;
+            height: auto;
+        }
+
+        #modalGif img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        #modalText {
+            font-size: 5em;
+            position: absolute;
+            top: 10%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            animation: flash .5s infinite;
+        }
+
+        @keyframes flash {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <div id="modal">
+        <div id="modalText">
+
+        </div>
+        <div id="modalGif">
+            <img id="modalGifImage" src="./images/shuffle gif 1.gif" />
+        </div>
+    </div>
+    <audio id="audio1">
+        <source src="./audio/party rock 1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
     <div class="container">
         <!-- Left Side for Slideshow -->
@@ -249,6 +308,8 @@
     </div>
 
     <script>
+        const eventDate = new Date("Oct 24, 2024 10:00:00")
+
         const planePositionForDays = {
             8: {
                 bottom: '58px',
@@ -315,7 +376,7 @@
     <script>
 
         // Countdown logic
-        const eventDate = new Date("Oct 24, 2024 10:00:00").getTime();
+        eventDate.getTime();
 
         function padStart(num) {
             return `${num}`.padStart(2, '0')
@@ -348,6 +409,13 @@
             elem.style.bottom = config.bottom;
             elem.style.transform = config.transform;
             elem.style.left = `${left}px`;
+        }
+
+        function hoursUntil(targetDate = eventDate) {
+            const now = new Date();
+            const differenceInMillis = new Date(targetDate) - now;
+            const hoursRemaining = differenceInMillis / (1000 * 60 * 60);
+            return Math.max(0, Math.floor(hoursRemaining)); // Ensures it doesn't return negative values
         }
 
         function getDistance() {
@@ -445,6 +513,54 @@
         [...document.querySelectorAll('#pageHeaderTitle span')].forEach((el, index) => {
             el.style.animationDelay = `${0.1 + (index * 0.1)}s`
         })
+    </script>
+
+    <script>
+        const audios = [
+            './audio/party rock 1.mp3',
+            './audio/uptown funk.mp3',
+            './audio/dancing remix.mp3',
+            './audio/gangnam style.mp3',
+        ]
+
+        const gifs = [
+            './gifs/shuffle gif 1.gif',
+            './gifs/uptown funk.gif',
+            './gifs/dancing remix.gif',
+            './gifs/gangnam style.gif',
+        ]
+
+        let currentAudioIndex = -1;
+
+        function showGif() {
+            currentAudioIndex = (currentAudioIndex + 1) % audios.length;
+
+            const modalElement = document.getElementById('modal');
+            modalElement.style.display = 'flex';
+
+            const modalText = document.getElementById('modalText');
+            modalText.innerText = `${hoursUntil()} HOURS TO GO!`
+
+            const audio = document.getElementById('audio1');
+            audio.src = audios[currentAudioIndex];
+
+            document.getElementById('modalGifImage').src = gifs[currentAudioIndex];
+
+            audio.play()
+            audio.addEventListener('ended', () => {
+                modalElement.style.display = 'none';
+            });
+        }
+
+        function checkGifInterval() {
+            const { hours } = getDistance()
+            if ([0].includes(hours)) {
+                showGif()
+            }
+        }
+
+        setInterval(checkGifInterval, 1000);
+
     </script>
 
 </body>
