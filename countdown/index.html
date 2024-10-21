@@ -553,8 +553,8 @@
         }
 
         function checkGifInterval() {
-            const { minutes, seconds } = getDistance()
-            if (minutes === 0 && seconds === 0) {
+            const { hours, minutes, seconds } = getDistance()
+            if (hours % 2 === 0 && minutes === 0 && seconds === 0) {
                 showGif()
             }
         }
