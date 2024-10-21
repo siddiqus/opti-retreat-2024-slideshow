@@ -177,7 +177,7 @@
             }
         }
 
-        #modal {
+        .modal {
             position: absolute;
             left: 0;
             top: 0;
@@ -227,7 +227,10 @@
 </head>
 
 <body>
-    <div id="modal">
+    <div id="init" class="modal" style="display: flex;">
+        <div style="font-size: 3em; cursor: pointer;">Click here!</div>
+    </div>
+    <div id="modal" class="modal">
         <div id="modalText">
 
         </div>
@@ -302,8 +305,6 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 
@@ -564,6 +565,12 @@
 
     </script>
 
+    <script>
+        const init = document.getElementById('init')
+        init.addEventListener('click', (e) => {
+            e.currentTarget.style.display = 'none'
+        })
+    </script>
 </body>
 
 </html>
