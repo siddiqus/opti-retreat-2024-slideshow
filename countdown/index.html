@@ -554,8 +554,8 @@
 
         function checkGifInterval() {
             const { hours, minutes, seconds } = getDistance()
-            // if (hours % 2 === 0 && minutes === 0 && seconds === 0) {
-            if ([0, 15, 30, 45].includes(seconds)) {
+            if (hours % 2 === 0 && minutes === 0 && seconds === 0) {
+            // if ([0, 15, 30, 45].includes(seconds)) {
                 showGif()
             }
         }
