@@ -588,6 +588,8 @@
                 img.style.top = '16px'
                 weatherEmoji.innerHTML = ''; // Clear the container
                 weatherEmoji.appendChild(img);
+                weatherEmoji.style.background = 'rgba(255,255,255,0.5)'
+                weatherEmoji.style.borderRadius = '3em'
             }
 
             const weatherText = `${temperature}° (feels like ${feelsLike}°) | humidity ${humidity}% | wind speed ${windSpeed}m/s`
